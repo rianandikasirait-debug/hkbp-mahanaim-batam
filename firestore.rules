@@ -1,0 +1,83 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    // Collection: users
+    // Fields: email, role, displayName
+    //
+    // Collection: congregations
+    // Fields: name, gender, birthDate, address, phone, baptismStatus, maritalStatus, ministry, createdAt
+    //
+    // Collection: news
+    // Fields: title, content, category, imageUrl, author, publishedAt
+    //
+    // Collection: gallery
+    // Fields: title, imageUrl, category, createdAt
+    //
+    // Collection: sermons
+    // Fields: title, preacher, youtubeUrl, date, summary
+    //
+    // Collection: finances
+    // Fields: type, amount, donorName, date, notes
+    //
+    // Collection: schedules
+    // Fields: time, name, description
+    // ===============================================================
+
+    // Helper Functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() && (
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
+        (request.auth.token.email == "riansirait26@gmail.com" && request.auth.token.email_verified == true)
+      );
+    }
+
+    function isStaff() {
+      return isAuthenticated() && (
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['admin', 'staff', 'pendeta']
+      );
+    }
+
+    // Rules for each collection
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+
+    match /congregations/{docId} {
+      allow read: if isStaff();
+      allow write: if isStaff();
+    }
+
+    match /news/{docId} {
+      allow read: if true; // Publicly readable
+      allow write: if isStaff();
+    }
+
+    match /gallery/{docId} {
+      allow read: if true; // Publicly readable
+      allow write: if isStaff();
+    }
+
+    match /sermons/{docId} {
+      allow read: if true; // Publicly readable
+      allow write: if isStaff();
+    }
+
+    match /finances/{docId} {
+      allow read: if isStaff();
+      allow write: if isStaff();
+    }
+
+    match /schedules/{docId} {
+      allow read: if true; // Publicly readable
+      allow write: if isStaff();
+    }
+  }
+}

@@ -1,0 +1,104 @@
+{
+  "entities": {
+    "congregation": {
+      "title": "Congregation",
+      "description": "Data jemaat gereja",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "description": "Nama lengkap" },
+        "gender": { "type": "string", "enum": ["Laki-laki", "Perempuan"] },
+        "birthDate": { "type": "string", "format": "date" },
+        "address": { "type": "string" },
+        "phone": { "type": "string" },
+        "baptismStatus": { "type": "boolean" },
+        "maritalStatus": { "type": "string", "enum": ["Belum Menikah", "Menikah", "Janda/Duda"] },
+        "ministry": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "gender", "birthDate"]
+    },
+    "news": {
+      "title": "News",
+      "description": "Warta jemaat dan berita gereja",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "content": { "type": "string" },
+        "category": { "type": "string" },
+        "imageUrl": { "type": "string" },
+        "author": { "type": "string" },
+        "publishedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "content", "publishedAt"]
+    },
+    "gallery": {
+      "title": "Gallery",
+      "description": "Foto kegiatan gereja",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "imageUrl": { "type": "string" },
+        "category": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["imageUrl", "createdAt"]
+    },
+    "sermon": {
+      "title": "Sermon",
+      "description": "Khotbah online",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "preacher": { "type": "string" },
+        "youtubeUrl": { "type": "string" },
+        "date": { "type": "string", "format": "date" },
+        "summary": { "type": "string" }
+      },
+      "required": ["title", "youtubeUrl", "date"]
+    },
+    "finance": {
+      "title": "Finance",
+      "description": "Catatan keuangan gereja",
+      "type": "object",
+      "properties": {
+        "type": { "type": "string", "enum": ["Persepuluhan", "Persembahan", "Donasi", "Lainnya"] },
+        "amount": { "type": "number" },
+        "donorName": { "type": "string" },
+        "date": { "type": "string", "format": "date" },
+        "notes": { "type": "string" }
+      },
+      "required": ["type", "amount", "date"]
+    },
+    "schedule": {
+      "title": "Schedule",
+      "description": "Jadwal ibadah",
+      "type": "object",
+      "properties": {
+        "time": { "type": "string" },
+        "name": { "type": "string" },
+        "description": { "type": "string" }
+      },
+      "required": ["time", "name"]
+    },
+    "user": {
+      "title": "User",
+      "description": "Admin and staff users",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string" },
+        "role": { "type": "string", "enum": ["admin", "staff", "pendeta"] },
+        "displayName": { "type": "string" }
+      },
+      "required": ["email", "role"]
+    }
+  },
+  "firestore": {
+    "congregations": { "schema": "congregation", "description": "Collection of congregation members" },
+    "news": { "schema": "news", "description": "Collection of church news and announcements" },
+    "gallery": { "schema": "gallery", "description": "Collection of gallery images" },
+    "sermons": { "schema": "sermon", "description": "Collection of sermons" },
+    "finances": { "schema": "finance", "description": "Collection of financial records" },
+    "schedules": { "schema": "schedule", "description": "Collection of worship schedules" },
+    "users": { "schema": "user", "description": "Collection of authorized users" }
+  }
+}
